@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "CPlayer.generated.h"
 
+// 플레이어를 오른쪽으로 계속 이동시키고 싶다.
+// 사용자의 입력을 받아서 상하좌우로 이동시키고 싶다.
 UCLASS()
 class SHOOTING_API ACPlayer : public APawn
 {
@@ -14,8 +16,6 @@ class SHOOTING_API ACPlayer : public APawn
 public:
 	// Sets default values for this pawn's properties
 	ACPlayer();
-
-	void TestPrint();
 
 protected:
 	// Called when the game starts or when spawned
@@ -28,4 +28,24 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+public:
+	// 필요속성 : 이동속도
+	UPROPERTY(EditAnywhere, Category="Settings")
+	float speed = 500;
+
+	FVector Direction;
+
+	// 사용자 좌우이동 처리 함수
+	void Horizontal(float value);
+	void Vertical(float value);
+
+public:
+	// 사용할 컴포넌트 추가(선언)
+	// BoxComp
+	UPROPERTY(VisibleAnywhere)
+	class UBoxComponent* BoxComp;
+	
+	// BodyMesh
+	UPROPERTY(VisibleAnywhere)
+	class UStaticMeshComponent* BodyMesh;
 };
