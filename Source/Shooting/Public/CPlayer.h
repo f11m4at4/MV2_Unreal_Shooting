@@ -39,6 +39,12 @@ public:
 	void Horizontal(float value);
 	void Vertical(float value);
 
+	// 발사처리 함수
+	void Fire();
+	// 총알공장
+	UPROPERTY(EditDefaultsOnly, Category="Bullet")
+	TSubclassOf<class ACBullet> BulletFactory;
+
 public:
 	// 사용할 컴포넌트 추가(선언)
 	// BoxComp

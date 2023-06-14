@@ -3,6 +3,7 @@
 
 #include "CPlayer.h"
 #include <Components/BoxComponent.h>
+#include "CBullet.h"
 
 
 // Sets default values
@@ -67,6 +68,9 @@ void ACPlayer::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	// 사용자가 등록해놓은 입력과 처리 함수를 묶어주자.
 	PlayerInputComponent->BindAxis(TEXT("Horizontal"), this, &ACPlayer::Horizontal);
 	PlayerInputComponent->BindAxis(TEXT("Vertical"), this, &ACPlayer::Vertical);
+
+	// 발사버튼 처리등록
+	PlayerInputComponent->BindAction(TEXT("Fire"), IE_Pressed, this, &ACPlayer::Fire);
 }
 
 void ACPlayer::Horizontal(float value)
@@ -77,5 +81,22 @@ void ACPlayer::Horizontal(float value)
 void ACPlayer::Vertical(float value)
 {
 	Direction.Z = value;
+}
+
+void ACPlayer::Fire()
+{
+	// 총알을 발사하고 싶다.
+	// 1. 총알공장에서 총알을 만들어야 한다.
+	UWorld* World = GetWorld();
+	FActorSpawnParameters Param;
+	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+	ACBullet* Bullet = World->SpawnActor<ACBullet>(BulletFactory, Param);
+	// 2. 총알을 발사(위치)하고 싶다.
+	// 만약 총알이 정상적으로 잘 만들어졌다면
+	if (Bullet != nullptr)
+	{
+		Bullet->SetActorLocation(GetActorLocation());
+	}
 }
 
