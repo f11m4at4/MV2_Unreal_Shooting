@@ -18,12 +18,14 @@ ACPlayer::ACPlayer()
 	RootComponent = BoxComp;
 	// 크기 설정
 	BoxComp->SetBoxExtent(FVector(20));
+	BoxComp->SetCollisionProfileName(TEXT("Player"));
 
 	// BodyMesh 컴포넌트를 추가하고 싶다.
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh")); 
 
 	// RootComponent 의 자식 컴포넌트로 붙이기
 	BodyMesh->SetupAttachment(RootComponent);
+	BodyMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// 위지, 회전, 크기 설정
 	BodyMesh->SetRelativeLocation(FVector(0, 0, 20));

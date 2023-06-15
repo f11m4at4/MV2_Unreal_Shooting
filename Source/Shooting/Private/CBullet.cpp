@@ -16,6 +16,7 @@ ACBullet::ACBullet()
 	RootComponent = BoxComp;
 	// 크기 설정
 	BoxComp->SetBoxExtent(FVector(32, 15, 32));
+	BoxComp->SetCollisionProfileName(TEXT("Bullet"));
 
 	// BodyMesh 컴포넌트를 추가하고 싶다.
 	BodyMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("BodyMesh"));
@@ -25,6 +26,7 @@ ACBullet::ACBullet()
 	BodyMesh->SetRelativeScale3D(FVector(1, 0.25f, 0.5f));
 	// RootComponent 의 자식 컴포넌트로 붙이기
 	BodyMesh->SetupAttachment(RootComponent);
+	BodyMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	// BodyMesh 에서 사용할 StaticMesh 데이터 동적 할당
 	ConstructorHelpers::FObjectFinder<UStaticMesh> TempMesh(TEXT("/Script/Engine.StaticMesh'/Game/StarterContent/Shapes/Shape_Cube.Shape_Cube'"));

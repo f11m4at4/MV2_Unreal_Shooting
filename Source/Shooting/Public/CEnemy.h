@@ -40,4 +40,7 @@ public:
 	// Target 방향으로 이동하고 싶다.
 	UPROPERTY()
 	class ACPlayer* Target;
+
+	UFUNCTION()
+	void OnComponentBeginOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 };
