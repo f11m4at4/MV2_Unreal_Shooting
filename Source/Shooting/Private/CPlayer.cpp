@@ -91,7 +91,7 @@ void ACPlayer::Fire()
 	// 1. 총알공장에서 총알을 만들어야 한다.
 	UWorld* World = GetWorld();
 	FActorSpawnParameters Param;
-	Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+	Param.SpawnCollisionHandlingOverride =  ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
 
 	ACBullet* Bullet = World->SpawnActor<ACBullet>(BulletFactory, Param);
 	// 2. 총알을 발사(위치)하고 싶다.

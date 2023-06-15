@@ -4,6 +4,8 @@
 #include "CEnemyGOD.h"
 #include "CEnemy.h"
 
+// 랜덤 시간 간격에 한번씩 적을 생성하고 싶다.
+
 // Sets default values
 ACEnemyGOD::ACEnemyGOD()
 {
@@ -16,7 +18,7 @@ ACEnemyGOD::ACEnemyGOD()
 void ACEnemyGOD::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	createTime = FMath::RandRange(minTime, maxTime);
 }
 
 // Called every frame
@@ -36,6 +38,8 @@ void ACEnemyGOD::Tick(float DeltaTime)
 		GetWorld()->SpawnActor<ACEnemy>(enemyFactory, GetActorLocation(), FRotator());
 
 		currentTime = 0;
+		// 생성시간을 랜덤하게 다시 설정하자.
+		createTime = FMath::RandRange(minTime, maxTime);
 	}
 }
 

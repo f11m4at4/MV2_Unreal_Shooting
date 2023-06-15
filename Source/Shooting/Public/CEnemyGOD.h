@@ -27,8 +27,14 @@ public:
 
 public:
 	// 필요속성 : 생성시간, 경과시간, 적공장
-	UPROPERTY(EditAnywhere, Category="Enemy")
+	UPROPERTY()
 	float createTime = 2;
+	// 필요속성 : 어디에서 어디까지 인지 범위필요
+	UPROPERTY(EditAnywhere, Category="Enemy")
+	float minTime = 2;
+	UPROPERTY(EditAnywhere, Category = "Enemy")
+	float maxTime = 5;
+
 	UPROPERTY()
 	float currentTime = 0;
 	UPROPERTY(EditDefaultsOnly, Category="Enemy")
