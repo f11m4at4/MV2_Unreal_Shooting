@@ -4,6 +4,7 @@
 #include "CPlayer.h"
 #include <Components/BoxComponent.h>
 #include "CBullet.h"
+#include <Kismet/GameplayStatics.h>
 
 
 // Sets default values
@@ -59,7 +60,7 @@ void ACPlayer::Tick(float DeltaTime)
 	FVector P0 = GetActorLocation();
 	FVector vt = Direction * speed * DeltaTime;
 	FVector P = P0 + vt;
-	SetActorLocation(P);
+	SetActorLocation(P, true);
 }
 
 // Called to bind functionality to input
@@ -87,6 +88,8 @@ void ACPlayer::Vertical(float value)
 
 void ACPlayer::Fire()
 {
+	// 총알 소리 나도록 하고싶다.
+	UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
 	// 총알을 발사하고 싶다.
 	// 1. 총알공장에서 총알을 만들어야 한다.
 	UWorld* World = GetWorld();

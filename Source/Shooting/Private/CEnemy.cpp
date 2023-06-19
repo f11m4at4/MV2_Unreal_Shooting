@@ -6,6 +6,7 @@
 #include <Kismet/GameplayStatics.h>
 #include "CPlayer.h"
 #include <Kismet/KismetMathLibrary.h>
+#include "DestoryZone.h"
 
 // BoxComp 가 다른 물체와 충돌했을 때
 // 갸도 죽고 나도 죽고 하고싶다.
@@ -80,11 +81,34 @@ void ACEnemy::Tick(float DeltaTime)
 	FVector vt = Direction * speed * DeltaTime;
 	FVector P = P0 + vt;
 	SetActorLocation(P);
+
+
+	// 5초후에 사라지게 하고 싶다.
+	// 1. 시간이 흘렀으니까
+	currentTime += DeltaTime;
+	// 2. why? 5초가 됐으니까
+	// -> 만약 경과시간이 제거시간을 초과했다면
+	if (currentTime > destroyTime)
+	{
+		// 3. 사라지게 하고싶다.	
+		Destroy();
+	}
 }
 
 // 갸도 죽고 나도 죽고 하고싶다.
 void ACEnemy::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
+	// 부딪힌 녀석이 DestroyZone 이라면 
+	ADestoryZone* DZ = Cast<ADestoryZone>(OtherActor);
+	if (DZ != nullptr)
+	{
+		// 아무것도 처리하지 않는다.
+		return;
+	}
+
+	// 폭발효과 재생
+	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFactory, GetActorLocation());
+
 	OtherActor->Destroy();
 	Destroy();
 }

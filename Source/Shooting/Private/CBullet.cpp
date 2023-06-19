@@ -36,6 +36,9 @@ ACBullet::ACBullet()
 		// -> BodyMesh 의 StaticMesh 에 할당하고 싶다.
 		BodyMesh->SetStaticMesh(TempMesh.Object);
 	}
+
+	// 2초후에 제거되도록 처리
+	SetLifeSpan(2);
 }
 
 // Called when the game starts or when spawned

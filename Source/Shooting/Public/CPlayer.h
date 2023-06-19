@@ -54,4 +54,9 @@ public:
 	// BodyMesh
 	UPROPERTY(VisibleAnywhere)
 	class UStaticMeshComponent* BodyMesh;
+
+	// 총알 발사할 때 사운드 나오게 하고 싶다.
+	UPROPERTY(EditDefaultsOnly, Category="Bullet")
+	class USoundBase* bulletSound;
+
 };

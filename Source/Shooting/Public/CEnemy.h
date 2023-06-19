@@ -6,11 +6,21 @@
 #include "GameFramework/Actor.h"
 #include "CEnemy.generated.h"
 
+// 5초후에 사라지게 하고 싶다.
+// 필요속성 : 제거시간, 경과시간
+
+
 UCLASS()
 class SHOOTING_API ACEnemy : public AActor
 {
 	GENERATED_BODY()
-	
+
+public:
+	// 필요속성 : 제거시간, 경과시간
+	UPROPERTY(EditAnywhere, Category="Settings")
+	float destroyTime = 5;
+	UPROPERTY()
+	float currentTime = 0;
 public:	
 	// Sets default values for this actor's properties
 	ACEnemy();
@@ -43,4 +53,8 @@ public:
 
 	UFUNCTION()
 	void OnComponentBeginOverlap( UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	// 폭발효과
+	UPROPERTY(EditDefaultsOnly, Category="Explosion")
+	class UParticleSystem* explosionFactory;
 };
