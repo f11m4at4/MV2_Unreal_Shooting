@@ -110,16 +110,25 @@ void ACPlayer::Vertical(float value)
 
 void ACPlayer::Fire()
 {
+	// 총알을 발사하고 싶다.
+	// -> 탄창에서 한발꺼내서 활성화 시킨다.
+	// 만약 탄창안에 총알이 없다면?
+	if (bulletPool.Num() <= 0) 
+	{
+		// 아무것도 안한다.
+		return;
+	}
 	// 총알 소리 나도록 하고싶다.
 	UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-	// 총알을 발사하고 싶다.
-	// 1. 총알공장에서 총알을 만들어야 한다.
-	UWorld* World = GetWorld();
-	FActorSpawnParameters Param;
-	Param.SpawnCollisionHandlingOverride =  ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-
-	ACBullet* Bullet = World->SpawnActor<ACBullet>(BulletFactory, Param);
-	// 2. 총알을 발사(위치)하고 싶다.
+	
+	// 1. 탄창에서 총알을 하나 뽑아야한다.
+	auto Bullet = bulletPool[0];
+	// 2. 총알을 활성화 시키고 싶다.
+	Bullet->SetActive(true);
+	// 3. 탄창에서 총알을 제거한다.
+	bulletPool.RemoveAt(0);
+	
+	// 4. 총알을 발사(위치)하고 싶다.
 	// 만약 총알이 정상적으로 잘 만들어졌다면
 	if (Bullet != nullptr)
 	{

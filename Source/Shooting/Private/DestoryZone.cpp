@@ -3,6 +3,9 @@
 
 #include "DestoryZone.h"
 #include <Components/BoxComponent.h>
+#include "CBullet.h"
+#include "CPlayer.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 ADestoryZone::ADestoryZone()
@@ -33,6 +36,19 @@ void ADestoryZone::Tick(float DeltaTime)
 
 void ADestoryZone::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	OtherActor->Destroy();
+	ACBullet* BT = Cast<ACBullet>(OtherActor);
+	if (BT != nullptr)
+	{
+		// 탄창에 넣어주자
+		// 1. 플레이어가 필요하다.
+		ACPlayer* Player = Cast<ACPlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+		// 2. 탄창이 필요하다.
+		Player->bulletPool.Add(BT);
+		BT->SetActive(false);
+	}
+	else
+	{
+		OtherActor->Destroy();
+	}
 }
 

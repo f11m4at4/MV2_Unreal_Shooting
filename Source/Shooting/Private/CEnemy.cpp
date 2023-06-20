@@ -7,6 +7,7 @@
 #include "CPlayer.h"
 #include <Kismet/KismetMathLibrary.h>
 #include "DestoryZone.h"
+#include "CBullet.h"
 
 // BoxComp 가 다른 물체와 충돌했을 때
 // 갸도 죽고 나도 죽고 하고싶다.
@@ -109,7 +110,25 @@ void ACEnemy::OnComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, 
 	// 폭발효과 재생
 	UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), explosionFactory, GetActorLocation());
 
-	OtherActor->Destroy();
+	// 만약 부딪힌 녀석이 총알이라면
+	// -> 탄창에 넣어주자.
+	// 그렇지않으면
+	// -> 제거하자
+	ACBullet* BT = Cast<ACBullet>(OtherActor);
+	if (BT != nullptr)
+	{
+		// 탄창에 넣어주자
+		// 1. 플레이어가 필요하다.
+		ACPlayer* Player = Cast<ACPlayer>(UGameplayStatics::GetPlayerPawn(GetWorld(),0));
+		// 2. 탄창이 필요하다.
+		Player->bulletPool.Add(BT);
+		BT->SetActive(false);
+	}
+	else
+	{
+		OtherActor->Destroy();
+	}
+
 	Destroy();
 }
 
