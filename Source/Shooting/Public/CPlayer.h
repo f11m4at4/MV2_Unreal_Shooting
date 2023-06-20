@@ -59,4 +59,11 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category="Bullet")
 	class USoundBase* bulletSound;
 
+public:
+	// 탄창(오브젝트풀 용 배열)
+	UPROPERTY()
+	TArray<class ACBullet*> bulletPool;
+	// 필요속성 : 몇발?
+	UPROPERTY(EditAnywhere, Category="Bullet")
+	int32 bulletPoolSize = 10;
 };

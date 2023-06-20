@@ -38,7 +38,7 @@ ACBullet::ACBullet()
 	}
 
 	// 2초후에 제거되도록 처리
-	SetLifeSpan(2);
+	//SetLifeSpan(2);
 }
 
 // Called when the game starts or when spawned
@@ -61,5 +61,21 @@ void ACBullet::Tick(float DeltaTime)
 	// 이동하고 싶다.
 	FVector P = P0 + vt;
 	SetActorLocation(P);
+}
+
+void ACBullet::SetActive(bool bActivation)
+{
+	// -> 1. 안보이게 처리하기
+	BodyMesh->SetVisibility(bActivation);
+
+	if(bActivation == false)
+	{
+		// -> 2. 충돌이 안되게 처리하기
+		BoxComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+	else
+	{
+		BoxComp->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	}
 }
 

@@ -36,4 +36,8 @@ public:
 	// 필요속성 : 속도
 	UPROPERTY(EditAnywhere, Category="Settings")
 	float speed = 1000;
+
+public:
+	// 총알의 활성화여부 처리 함수
+	void SetActive(bool bActivation);
 };

@@ -48,6 +48,26 @@ void ACPlayer::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	
+
+	// 총알을 미리 만들어서 탄창에 추가하고 싶다.
+	// 1. 반복적으로 탄창 크기만큼
+	for(int i=0;i<bulletPoolSize;i++)
+	{
+		// 2. 총알필요하다.
+		// 총알공장에서 총알을 만들어야 한다.
+		UWorld* World = GetWorld();
+		FActorSpawnParameters Param;
+		Param.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+
+		ACBullet* bullet = World->SpawnActor<ACBullet>(BulletFactory, Param);
+		// 3. 탄창에 총알을 추가하고 싶다.
+		bulletPool.Add(bullet);
+
+		// 총알이 만들어지면
+		// 비활성화 처리
+		bullet->SetActive(false);
+	}
 }
 
 // Called every frame
@@ -61,6 +81,8 @@ void ACPlayer::Tick(float DeltaTime)
 	FVector vt = Direction * speed * DeltaTime;
 	FVector P = P0 + vt;
 	SetActorLocation(P, true);
+
+
 }
 
 // Called to bind functionality to input
