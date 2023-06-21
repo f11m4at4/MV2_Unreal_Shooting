@@ -57,7 +57,7 @@ void ACBullet::Tick(float DeltaTime)
 	// P = P0 + vt
 	FVector P0 = GetActorLocation();
 	// 방향이 필요하다.
-	FVector vt = FVector::UpVector * speed * DeltaTime;
+	FVector vt = GetActorUpVector() * speed * DeltaTime;
 	// 이동하고 싶다.
 	FVector P = P0 + vt;
 	SetActorLocation(P);

@@ -66,4 +66,16 @@ public:
 	// 필요속성 : 몇발?
 	UPROPERTY(EditAnywhere, Category="Bullet")
 	int32 bulletPoolSize = 10;
+
+	// 왼쪽 오른쪽 총구 추가
+	UPROPERTY(VisibleAnywhere)
+	class USceneComponent* leftFirePosition;
+	UPROPERTY(VisibleAnywhere)
+	class USceneComponent* rightFirePosition;
+
+	// 총알 발사 함수
+	void FireBulletAtLocation(FVector location, FRotator rotation);
+
+	UPROPERTY(EditAnywhere)
+	int32 degree = 30;
 };

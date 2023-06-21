@@ -5,6 +5,7 @@
 #include <Components/BoxComponent.h>
 #include "CBullet.h"
 #include <Kismet/GameplayStatics.h>
+#include <Kismet/KismetMathLibrary.h>
 
 
 // Sets default values
@@ -41,6 +42,15 @@ ACPlayer::ACPlayer()
 		// -> BodyMesh 의 StaticMesh 에 할당하고 싶다.
 		BodyMesh->SetStaticMesh(TempMesh.Object);
 	}
+
+
+	// 총구 컴포넌트 추가
+	leftFirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("leftFirePosition"));
+	rightFirePosition = CreateDefaultSubobject<USceneComponent>(TEXT("rightFirePosition"));
+	leftFirePosition->SetupAttachment(RootComponent);
+	rightFirePosition->SetupAttachment(RootComponent);
+	leftFirePosition->SetRelativeLocation(FVector(15, -97, 42));
+	rightFirePosition->SetRelativeLocation(FVector(15, 97, 42));
 }
 
 // Called when the game starts or when spawned
@@ -110,29 +120,67 @@ void ACPlayer::Vertical(float value)
 
 void ACPlayer::Fire()
 {
-	// 총알을 발사하고 싶다.
-	// -> 탄창에서 한발꺼내서 활성화 시킨다.
-	// 만약 탄창안에 총알이 없다면?
-	if (bulletPool.Num() <= 0) 
+	// 한번 입력 받아서 두번 쏘고 싶다.
+	FireBulletAtLocation(leftFirePosition->GetComponentLocation(), leftFirePosition->GetComponentRotation());
+	FireBulletAtLocation(rightFirePosition->GetComponentLocation(), rightFirePosition->GetComponentRotation());
+}
+
+void ACPlayer::FireBulletAtLocation(FVector location, FRotator rotation)
+{
+	// 1.시간이 흘러야 한다.
+	// 2. 생성시간이 됐다면
+		// 3. 아래 내용 호출한다.
+		// 4. 각도를 증가시킨다.
+		// 5. 경과시간을 초기화 한다.
+		
+	// 1. theta 는 radian 로 변경해야 한다.
+	int angleRange = 360/ degree;
+	float theta = 0;
+	for (int i = 0; i < angleRange; i++)
 	{
-		// 아무것도 안한다.
-		return;
-	}
-	// 총알 소리 나도록 하고싶다.
-	UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
-	
-	// 1. 탄창에서 총알을 하나 뽑아야한다.
-	auto Bullet = bulletPool[0];
-	// 2. 총알을 활성화 시키고 싶다.
-	Bullet->SetActive(true);
-	// 3. 탄창에서 총알을 제거한다.
-	bulletPool.RemoveAt(0);
-	
-	// 4. 총알을 발사(위치)하고 싶다.
-	// 만약 총알이 정상적으로 잘 만들어졌다면
-	if (Bullet != nullptr)
-	{
-		Bullet->SetActorLocation(GetActorLocation());
+		theta = i* degree;
+		// 회전처리
+		float thetaToRadian = FMath::DegreesToRadians(theta);
+		// 2. z = sin theta
+		float z = FMath::Sin(thetaToRadian);
+		// 3. y = cos theta
+		float y = FMath::Cos(thetaToRadian);
+		// 4. Target 이 필요하다.
+		FVector target;
+		target.X = 0;
+		target.Y = y;
+		target.Z = z;
+		//방향이 필요하다.
+		FVector dir = target - FVector::Zero();
+
+		// 총알을 발사하고 싶다.
+		// -> 탄창에서 한발꺼내서 활성화 시킨다.
+		// 만약 탄창안에 총알이 없다면?
+		if (bulletPool.Num() <= 0)
+		{
+			// 아무것도 안한다.
+			return;
+		}
+		// 총알 소리 나도록 하고싶다.
+		UGameplayStatics::PlaySound2D(GetWorld(), bulletSound);
+
+		// 1. 탄창에서 총알을 하나 뽑아야한다.
+		auto Bullet = bulletPool[0];
+		// 2. 총알을 활성화 시키고 싶다.
+		Bullet->SetActive(true);
+		// 3. 탄창에서 총알을 제거한다.
+		bulletPool.RemoveAt(0);
+
+		// 4. 총알을 발사(위치)하고 싶다.
+		// 만약 총알이 정상적으로 잘 만들어졌다면
+		if (Bullet != nullptr)
+		{
+			Bullet->SetActorLocation(location);
+			// rotation 을 내가 구한 방향으로 정하고 싶다.
+			// Direction 방향으로 Actor 가 회전하도록 처리하고 싶다.
+			FRotator Rot = UKismetMathLibrary::MakeRotFromZX(dir, GetActorForwardVector());
+			Bullet->SetActorRotation(Rot);
+		}
 	}
 }
 

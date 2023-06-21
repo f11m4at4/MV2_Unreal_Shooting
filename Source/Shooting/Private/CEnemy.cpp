@@ -79,7 +79,7 @@ void ACEnemy::Tick(float DeltaTime)
 	// P = P0 + vt
 	
 	FVector P0 = GetActorLocation();
-	FVector vt = Direction * speed * DeltaTime;
+	FVector vt = GetActorUpVector() * speed * DeltaTime;
 	FVector P = P0 + vt;
 	SetActorLocation(P);
 
